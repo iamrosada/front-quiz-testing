@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 interface FormData {
@@ -38,10 +39,20 @@ const ComprehensiveForm: React.FC = () => {
     units: [],
   });
 
-  const handleCreateSection = (e: React.FormEvent) => {
+  const handleCreateSection = async (e: React.FormEvent) => {
     e.preventDefault();
     // Lógica para criar a seção no backend ou realizar outras ações
-    console.log("Criar Seção:", formData);
+    const { sectionName, units } = formData;
+    const Quiz = {
+      sections: {
+        sectionName,
+        units,
+      },
+    };
+    console.log("Criar Seção:", Quiz);
+    await axios.post("http://localhost:8080/v1/education/quiz/create", Quiz);
+
+    // console.log(response.data);
   };
 
   const handleAddUnit = () => {
