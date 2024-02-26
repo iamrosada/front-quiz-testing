@@ -1,13 +1,314 @@
-import axios from "axios";
-import React, { useState } from "react";
+// import React, { useState } from "react";
+// import axios from "axios";
 
-interface FormData {
+// const CreateQuizForm: React.FC = () => {
+//   const [formData, setFormData] = useState<any[]>([
+//     {
+//       sectionName: "",
+//       units: [
+//         {
+//           unitName: "",
+//           levels: [
+//             {
+//               quizes: [
+//                 {
+//                   questionText: "",
+//                   options: ["", "", "", ""],
+//                   correctOptionIndex: "",
+//                 },
+//               ],
+//             },
+//           ],
+//         },
+//       ],
+//     },
+//   ]);
+
+//   const handleAddSection = () => {
+//     setFormData([
+//       ...formData,
+//       {
+//         sectionName: "",
+//         units: [
+//           {
+//             unitName: "",
+//             levels: [
+//               {
+//                 quizes: [
+//                   {
+//                     questionText: "",
+//                     options: ["", "", "", ""],
+//                     correctOptionIndex: "",
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//     ]);
+//   };
+
+//   const handleAddUnit = (sectionIndex: number) => {
+//     const newFormData = [...formData];
+//     newFormData[sectionIndex].units.push({
+//       unitName: "",
+//       levels: [
+//         {
+//           quizes: [
+//             {
+//               questionText: "",
+//               options: ["", "", "", ""],
+//               correctOptionIndex: "",
+//             },
+//           ],
+//         },
+//       ],
+//     });
+//     setFormData(newFormData);
+//   };
+
+//   const handleAddLevel = (sectionIndex: number, unitIndex: number) => {
+//     const newFormData = [...formData];
+//     newFormData[sectionIndex].units[unitIndex].levels.push({
+//       quizes: [
+//         { questionText: "", options: ["", "", "", ""], correctOptionIndex: "" },
+//       ],
+//     });
+//     setFormData(newFormData);
+//   };
+
+//   const handleAddQuestion = (
+//     sectionIndex: number,
+//     unitIndex: number,
+//     levelIndex: number
+//   ) => {
+//     const newFormData = [...formData];
+//     newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes.push({
+//       questionText: "",
+//       options: ["", "", "", ""],
+//       correctOptionIndex: "",
+//     });
+//     setFormData(newFormData);
+//   };
+
+//   const handleChange = (
+//     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+//     sectionIndex: number,
+//     unitIndex: number,
+//     levelIndex: number,
+//     questionIndex: number,
+//     field: string
+//   ) => {
+//     const { value } = e.target;
+//     const newFormData = [...formData];
+//     if (field === "options") {
+//       // If the field is "options", update the corresponding option at the specified index
+//       newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes[
+//         questionIndex
+//       ].options[e.target.dataset.optionindex as any] = value;
+//     } else {
+//       // For other fields, update normally
+//       newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes[
+//         questionIndex
+//       ][field] = value;
+//     }
+//     setFormData(newFormData);
+//   };
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     try {
+//       // const response = await axios.post("/api/create-quiz", formData);
+//       // await axios.post(
+//       //   "http://localhost:8080/v1/education/quiz/create",
+//       //   formData
+//       // );
+
+//       console.log(JSON.stringify(formData, null, 2));
+//       // Se precisar fazer algo após o envio dos dados, faça aqui
+//     } catch (error) {
+//       console.error("Erro ao enviar dados:", error);
+//     }
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit} className="m-4">
+//       {formData.map((section, sectionIndex) => (
+//         <div
+//           key={sectionIndex}
+//           className="border border-gray-300 rounded p-4 mb-4"
+//         >
+//           <input
+//             type="text"
+//             placeholder="Nome da seção"
+//             value={section.sectionName}
+//             onChange={(e) =>
+//               setFormData(
+//                 formData.map((item, index) =>
+//                   index === sectionIndex
+//                     ? { ...item, sectionName: e.target.value }
+//                     : item
+//                 )
+//               )
+//             }
+//             className="border border-gray-300 rounded p-2 mb-2"
+//           />
+//           {section.units.map((unit: any, unitIndex: any) => (
+//             <div
+//               key={unitIndex}
+//               className="border border-gray-300 rounded p-4 mb-4"
+//             >
+//               <input
+//                 type="text"
+//                 placeholder="Nome da unidade"
+//                 value={unit.unitName}
+//                 onChange={(e) =>
+//                   setFormData(
+//                     formData.map((item, index) =>
+//                       index === sectionIndex
+//                         ? {
+//                             ...item,
+//                             units: item.units.map((u: any, i: any) =>
+//                               i === unitIndex
+//                                 ? { ...u, unitName: e.target.value }
+//                                 : u
+//                             ),
+//                           }
+//                         : item
+//                     )
+//                   )
+//                 }
+//                 className="border border-gray-300 rounded p-2 mb-2"
+//               />
+//               {unit.levels.map((level: any, levelIndex: any) => (
+//                 <div
+//                   key={levelIndex}
+//                   className="border border-gray-300 rounded p-4 mb-4"
+//                 >
+//                   {level.quizes.map((quiz: any, quizIndex: any) => (
+//                     <div key={quizIndex} className="mb-2">
+//                       <input
+//                         type="text"
+//                         placeholder="Pergunta"
+//                         value={quiz.questionText}
+//                         onChange={(e) =>
+//                           handleChange(
+//                             e,
+//                             sectionIndex,
+//                             unitIndex,
+//                             levelIndex,
+//                             quizIndex,
+//                             "questionText"
+//                           )
+//                         }
+//                         className="border border-gray-300 rounded p-2 mb-2"
+//                       />
+//                       {/* Input for options */}
+
+//                       {quiz.options &&
+//                         quiz.options.map(
+//                           (option: string, optionIndex: number) => (
+//                             <input
+//                               key={optionIndex}
+//                               type="text"
+//                               placeholder={`Opção ${optionIndex + 1}`}
+//                               value={option}
+//                               onChange={(e) =>
+//                                 handleChange(
+//                                   e,
+//                                   sectionIndex,
+//                                   unitIndex,
+//                                   levelIndex,
+//                                   quizIndex,
+//                                   "options"
+//                                 )
+//                               }
+//                               className="border border-gray-300 rounded p-2 mb-2"
+//                               data-optionindex={optionIndex}
+//                             />
+//                           )
+//                         )}
+
+//                       {/* Input for correct option index */}
+//                       <input
+//                         type="text"
+//                         placeholder="Índice da opção correta"
+//                         value={quiz.correctOptionIndex}
+//                         onChange={(e) =>
+//                           handleChange(
+//                             e,
+//                             sectionIndex,
+//                             unitIndex,
+//                             levelIndex,
+//                             quizIndex,
+//                             "correctOptionIndex"
+//                           )
+//                         }
+//                         className="border border-gray-300 rounded p-2 mb-2"
+//                       />
+//                     </div>
+//                   ))}
+//                   <button
+//                     type="button"
+//                     onClick={() =>
+//                       handleAddQuestion(sectionIndex, unitIndex, levelIndex)
+//                     }
+//                     className="bg-blue-500 text-white rounded px-4 py-2"
+//                   >
+//                     Adicionar Pergunta
+//                   </button>
+//                 </div>
+//               ))}
+//               <button
+//                 type="button"
+//                 onClick={() => handleAddLevel(sectionIndex, unitIndex)}
+//                 className="bg-blue-500 text-white rounded px-4 py-2"
+//               >
+//                 Adicionar Nível
+//               </button>
+//             </div>
+//           ))}
+//           <button
+//             type="button"
+//             onClick={() => handleAddUnit(sectionIndex)}
+//             className="bg-blue-500 text-white rounded px-4 py-2"
+//           >
+//             Adicionar Unidade
+//           </button>
+//         </div>
+//       ))}
+//       <button
+//         type="button"
+//         onClick={handleAddSection}
+//         className="bg-blue-500 text-white rounded px-4 py-2"
+//       >
+//         Adicionar Seção
+//       </button>
+//       <button
+//         type="submit"
+//         className="bg-green-500 text-white rounded px-4 py-2"
+//       >
+//         Enviar
+//       </button>
+//     </form>
+//   );
+// };
+
+// export default CreateQuizForm;
+
+import React, { useState } from "react";
+import axios from "axios";
+
+interface QuizData {
   sectionName: string;
+  description: string;
+  imgURL: string;
+  color: string;
   units: {
     unitName: string;
-    questions: {
-      id: string;
-      quiz: {
+    levels: {
+      quizes: {
         questionText: string;
         options: string[];
         correctOptionIndex: string;
@@ -16,314 +317,406 @@ interface FormData {
   }[];
 }
 
-const generateUniqueId = (): string => {
-  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const uuidLength = 8;
-  let shortUUID = "";
-  for (let i = 0; i < uuidLength; i++) {
-    const randomValue = Math.random();
-    const character =
-      randomValue < 0.5
-        ? Math.floor(randomValue * 10).toString()
-        : alphabet[Math.floor(randomValue * alphabet.length)];
+const CreateQuizForm: React.FC = () => {
+  const [formData, setFormData] = useState<QuizData[]>([
+    {
+      sectionName: "",
+      description: "",
+      imgURL: "",
+      color: "",
+      units: [
+        {
+          unitName: "",
+          levels: [
+            {
+              quizes: [
+                {
+                  questionText: "",
+                  options: ["", "", "", ""],
+                  correctOptionIndex: "",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ]);
 
-    shortUUID += character;
-  }
-
-  return shortUUID;
-};
-
-const ComprehensiveForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    sectionName: "",
-    units: [],
-  });
-
-  const handleCreateSection = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // Lógica para criar a seção no backend ou realizar outras ações
-    const { sectionName, units } = formData;
-    const Quiz = {
-      sections: {
-        sectionName,
-        units,
-      },
-    };
-    console.log("Criar Seção:", Quiz);
-    await axios.post("http://localhost:8080/v1/education/quiz/create", Quiz);
-
-    // console.log(response.data);
-  };
-
-  const handleAddUnit = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      units: [...prevData.units, { unitName: "", questions: [] }],
-    }));
-  };
-
-  const handleAddQuestion = (unitIndex: number) => {
-    setFormData((prevData) => {
-      const updatedUnits = [...prevData.units];
-      const newQuestionId = generateUniqueId();
-      updatedUnits[unitIndex].questions.push({
-        id: newQuestionId,
-        quiz: [
+  const handleAddSection = () => {
+    setFormData([
+      ...formData,
+      {
+        sectionName: "",
+        description: "",
+        imgURL: "",
+        color: "",
+        units: [
           {
-            questionText: "",
-            options: [],
-            correctOptionIndex: "",
+            unitName: "",
+            levels: [
+              {
+                quizes: [
+                  {
+                    questionText: "",
+                    options: ["", "", "", ""],
+                    correctOptionIndex: "",
+                  },
+                ],
+              },
+            ],
           },
         ],
-      });
+      },
+    ]);
+  };
 
-      return { ...prevData, units: updatedUnits };
+  const handleAddUnit = (sectionIndex: number) => {
+    const newFormData = [...formData];
+    newFormData[sectionIndex].units.push({
+      unitName: "",
+      levels: [
+        {
+          quizes: [
+            {
+              questionText: "",
+              options: ["", "", "", ""],
+              correctOptionIndex: "",
+            },
+          ],
+        },
+      ],
     });
+    setFormData(newFormData);
   };
 
-  return (
-    <form className="p-4" onSubmit={handleCreateSection}>
-      <div className="mb-4">
-        <label
-          htmlFor="sectionName"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Nome da Seção
-        </label>
-
-        <input
-          type="text"
-          id="sectionName"
-          value={formData.sectionName}
-          onChange={(e) => {
-            setFormData({ ...formData, sectionName: e.target.value });
-          }}
-          className="mt-1 p-2 border rounded-md w-full"
-        />
-      </div>
-
-      {formData.units.map((unit, unitIndex) => (
-        <div key={unitIndex} className="mb-4">
-          <label
-            htmlFor={`unitName${unitIndex}`}
-            className="block text-sm font-medium text-gray-700"
-          >
-            Nome da Unidade
-          </label>
-          <input
-            type="text"
-            id={`unitName${unitIndex}`}
-            value={unit.unitName}
-            onChange={(e) =>
-              setFormData((prevData) => {
-                const updatedUnits = [...prevData.units];
-                updatedUnits[unitIndex].unitName = e.target.value;
-                return { ...prevData, units: updatedUnits };
-              })
-            }
-            className="mt-1 p-2 border rounded-md w-full"
-          />
-
-          {/* Adicionar Pergunta para a Unidade */}
-          <button
-            type="button"
-            onClick={() => handleAddQuestion(unitIndex)}
-            className="bg-green-500 text-white px-4 py-2 rounded-md mb-4 mt-1"
-          >
-            Adicionar Pergunta
-          </button>
-
-          {unit.questions.map((question, questionIndex) => (
-            <QuestionForm
-              key={questionIndex}
-              unitIndex={unitIndex}
-              questionIndex={questionIndex}
-              questionData={question}
-              setFormData={setFormData}
-            />
-          ))}
-        </div>
-      ))}
-
-      <button
-        type="button"
-        onClick={handleAddUnit}
-        className="bg-green-500 text-white px-4 py-2 rounded-md mb-4"
-      >
-        Adicionar Unidade
-      </button>
-
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
-      >
-        Criar Seção
-      </button>
-    </form>
-  );
-};
-
-interface QuestionFormProps {
-  unitIndex: number;
-  questionIndex: number;
-  questionData: {
-    id: string;
-    quiz: {
-      questionText: string;
-      options: string[];
-      correctOptionIndex: string;
-    }[];
+  const handleAddLevel = (sectionIndex: number, unitIndex: number) => {
+    const newFormData = [...formData];
+    newFormData[sectionIndex].units[unitIndex].levels.push({
+      quizes: [
+        { questionText: "", options: ["", "", "", ""], correctOptionIndex: "" },
+      ],
+    });
+    setFormData(newFormData);
   };
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-}
 
-const QuestionForm: React.FC<QuestionFormProps> = ({
-  unitIndex,
-  questionIndex,
-  questionData,
-  setFormData,
-}) => {
-  const { id, quiz } = questionData;
+  const handleAddQuestion = (
+    sectionIndex: number,
+    unitIndex: number,
+    levelIndex: number
+  ) => {
+    const newFormData = [...formData];
+    newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes.push({
+      questionText: "",
+      options: ["", "", "", ""],
+      correctOptionIndex: "",
+    });
+    setFormData(newFormData);
+  };
 
-  const handleCreateQuestion = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormData((prevData) => {
-      const updatedUnits = [...prevData.units];
-      updatedUnits[unitIndex].questions[questionIndex] = {
-        id: id,
-        quiz: quiz.map((question) => ({
-          questionText: question.questionText || "",
-          options: question.options,
-          correctOptionIndex: question.correctOptionIndex,
-        })),
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    sectionIndex: number,
+    unitIndex: number,
+    levelIndex: number,
+    questionIndex: number,
+    field: string
+  ) => {
+    const { value } = e.target;
+    const newFormData = [...formData] as any;
+    if (field === "options") {
+      newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes[
+        questionIndex
+      ].options[e.target.dataset.optionindex as any] = value;
+    } else {
+      newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes[
+        questionIndex as any
+      ][field] = value;
+    }
+    setFormData(newFormData);
+  };
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    sectionIndex: number
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64URL = reader.result as string; // URL da imagem em Base64
+        setFormData((prevState) => {
+          const newState = [...prevState];
+          newState[sectionIndex].imgURL = base64URL;
+          return newState;
+        });
       };
-      return { ...prevData, units: updatedUnits };
-    });
+      reader.readAsDataURL(file); // Lê o arquivo como uma URL de dados (Base64)
+    }
   };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // const response = await axios.post("/api/create-quiz", formData);
+      // await axios.post(
+      //   "http://localhost:8080/v1/education/quiz/create",
+      //   formData
+      // );
 
-  const handleAddOption = () => {
-    setFormData((prevData) => {
-      const updatedUnits = [...prevData.units];
-      const updatedQuestions = [...updatedUnits[unitIndex].questions];
-
-      updatedQuestions[questionIndex].quiz.forEach((question) => {
-        question.options = [...question.options, ""];
-      });
-
-      updatedUnits[unitIndex].questions = updatedQuestions;
-      return { ...prevData, units: updatedUnits };
-    });
-  };
-
-  const handleOptionChange = (optionIndex: number, value: string) => {
-    setFormData((prevData) => {
-      const updatedUnits = [...prevData.units];
-      const updatedQuestions = [...updatedUnits[unitIndex].questions];
-
-      updatedQuestions[questionIndex].quiz.forEach((question) => {
-        question.options[optionIndex] = value;
-      });
-
-      updatedUnits[unitIndex].questions = updatedQuestions;
-      return { ...prevData, units: updatedUnits };
-    });
-  };
-
-  const handleQuestionTextChange = (value: string) => {
-    setFormData((prevData) => {
-      const updatedUnits = [...prevData.units];
-      updatedUnits[unitIndex].questions[questionIndex].quiz[0].questionText =
-        value;
-      return { ...prevData, units: updatedUnits };
-    });
-  };
-
-  const handleCorrectOptionIndexChange = (value: string) => {
-    // Parse the input value as an integer
-    const intValue = parseInt(value, 10);
-
-    // Check if the parsed value is not negative before updating the state
-    if (!isNaN(intValue) && intValue >= 0) {
-      setFormData((prevData) => {
-        const updatedUnits = [...prevData.units];
-        updatedUnits[unitIndex].questions[
-          questionIndex
-        ].quiz[0].correctOptionIndex = intValue.toString();
-        return { ...prevData, units: updatedUnits };
-      });
+      console.log(JSON.stringify(formData, null, 2));
+      // Perform any actions needed after data submission here
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
   };
 
   return (
-    <form
-      className="p-4 border border-gray-300 rounded-md mb-4"
-      onSubmit={handleCreateQuestion}
-    >
-      <div className="mb-4">
-        <label
-          htmlFor={`questionText${unitIndex}-${questionIndex}`}
-          className="block text-sm font-medium text-gray-700"
+    <form onSubmit={handleSubmit} className="m-4">
+      {formData.map((section, sectionIndex) => (
+        <div
+          key={sectionIndex}
+          className="border border-gray-300 rounded p-4 mb-4"
         >
-          Texto da Pergunta
-        </label>
-        <textarea
-          id={`questionText${unitIndex}-${questionIndex}`}
-          rows={4}
-          value={quiz[0].questionText}
-          onChange={(e) => handleQuestionTextChange(e.target.value)}
-          className="mt-1 p-2 border rounded-md w-full"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label
-          htmlFor={`options${unitIndex}-${questionIndex}`}
-          className="block text-sm font-medium text-gray-700"
-        >
-          Opções (separadas por vírgula)
-        </label>
-        {quiz[0].options.map((option, index) => (
           <input
-            key={index}
-            type="text"
-            value={option}
-            onChange={(e) => handleOptionChange(index, e.target.value)}
-            className="mt-1 p-2 border rounded-md w-full"
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageChange(e, sectionIndex)}
+            className="border border-gray-300 rounded p-2 mb-2 mt-3"
           />
-        ))}
-        <button
-          type="button"
-          onClick={handleAddOption}
-          className="mt-2 bg-gray-500 text-white px-4 py-2 rounded-md"
-        >
-          Adicionar Opção
-        </button>
-      </div>
+          {section.imgURL && (
+            <img
+              src={section.imgURL}
+              alt="Preview"
+              style={{ maxWidth: "200px", maxHeight: "200px" }}
+            />
+          )}
+          <input
+            type="text"
+            placeholder="Section Name"
+            value={section.sectionName}
+            onChange={(e) =>
+              setFormData(
+                formData.map((item, index) =>
+                  index === sectionIndex
+                    ? { ...item, sectionName: e.target.value }
+                    : item
+                )
+              )
+            }
+            className="border border-gray-300 rounded p-2 mb-2 mt-2"
+          />
+          <input
+            type="text"
+            placeholder="Description"
+            value={section.description}
+            onChange={(e) =>
+              setFormData(
+                formData.map((item, index) =>
+                  index === sectionIndex
+                    ? { ...item, description: e.target.value }
+                    : item
+                )
+              )
+            }
+            className="border border-gray-300 rounded p-2 mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Image URL"
+            value={section.imgURL}
+            onChange={(e) =>
+              setFormData(
+                formData.map((item, index) =>
+                  index === sectionIndex
+                    ? { ...item, imgURL: e.target.value }
+                    : item
+                )
+              )
+            }
+            className="border border-gray-300 rounded p-2 mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Color"
+            value={section.color}
+            onChange={(e) =>
+              setFormData(
+                formData.map((item, index) =>
+                  index === sectionIndex
+                    ? { ...item, color: e.target.value }
+                    : item
+                )
+              )
+            }
+            className="border border-gray-300 rounded p-2 mb-2"
+          />
+          {section.units.map((unit: any, unitIndex: any) => (
+            <div
+              key={unitIndex}
+              className="border border-gray-300 rounded p-4 mb-4"
+            >
+              <input
+                type="text"
+                placeholder="Unit Name"
+                value={unit.unitName}
+                onChange={(e) =>
+                  setFormData(
+                    formData.map((item, index) =>
+                      index === sectionIndex
+                        ? {
+                            ...item,
+                            units: item.units.map((u: any, i: any) =>
+                              i === unitIndex
+                                ? { ...u, unitName: e.target.value }
+                                : u
+                            ),
+                          }
+                        : item
+                    )
+                  )
+                }
+                className="border border-gray-300 rounded p-2 mb-2"
+              />
+              {unit.levels.map((level: any, levelIndex: any) => (
+                <div
+                  key={levelIndex}
+                  className="border border-gray-300 rounded p-4 mb-4"
+                >
+                  {level.quizes.map((quiz: any, quizIndex: any) => (
+                    <div key={quizIndex} className="mb-2">
+                      <input
+                        type="text"
+                        placeholder="Question"
+                        value={quiz.questionText}
+                        onChange={(e) =>
+                          handleChange(
+                            e,
+                            sectionIndex,
+                            unitIndex,
+                            levelIndex,
+                            quizIndex,
+                            "questionText"
+                          )
+                        }
+                        className="border border-gray-300 rounded p-2 mb-2"
+                      />
 
-      <div className="mb-4">
-        <label
-          htmlFor={`correctOptionIndex${unitIndex}-${questionIndex}`}
-          className="block text-sm font-medium text-gray-700"
-        >
-          Índice da Opção Correta
-        </label>
-        <input
-          type="number"
-          id={`correctOptionIndex${unitIndex}-${questionIndex}`}
-          value={quiz[0].correctOptionIndex}
-          onChange={(e) => handleCorrectOptionIndexChange(e.target.value)}
-          className="mt-1 p-2 border rounded-md w-full"
-        />
-      </div>
+                      {quiz.options &&
+                        quiz.options.map(
+                          (option: string, optionIndex: number) => (
+                            <input
+                              key={optionIndex}
+                              type="text"
+                              placeholder={`Option ${optionIndex + 1}`}
+                              value={option}
+                              onChange={(e) =>
+                                handleChange(
+                                  e,
+                                  sectionIndex,
+                                  unitIndex,
+                                  levelIndex,
+                                  quizIndex,
+                                  "options"
+                                )
+                              }
+                              className="border border-gray-300 rounded p-2 mb-2"
+                              data-optionindex={optionIndex}
+                            />
+                          )
+                        )}
 
+                      <input
+                        type="text"
+                        placeholder="Correct Option Index"
+                        value={quiz.correctOptionIndex}
+                        onChange={(e) =>
+                          handleChange(
+                            e,
+                            sectionIndex,
+                            unitIndex,
+                            levelIndex,
+                            quizIndex,
+                            "correctOptionIndex"
+                          )
+                        }
+                        className="border border-gray-300 rounded p-2 mb-2"
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleAddQuestion(sectionIndex, unitIndex, levelIndex)
+                    }
+                    className="bg-blue-500 text-white rounded px-4 py-2"
+                  >
+                    Add Question
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => handleAddLevel(sectionIndex, unitIndex)}
+                className="bg-blue-500 text-white rounded px-4 py-2"
+              >
+                Add Level
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => handleAddUnit(sectionIndex)}
+            className="bg-blue-500 text-white rounded px-4 py-2"
+          >
+            Add Unit
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={handleAddSection}
+        className="bg-blue-500 text-white rounded px-4 py-2"
+      >
+        Add Section
+      </button>
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        className="bg-green-500 text-white rounded px-4 py-2"
       >
-        Criar Pergunta
+        Submit
       </button>
     </form>
   );
 };
 
-export default ComprehensiveForm;
+export default CreateQuizForm;
+
+export interface SectionInfo {
+  id: string;
+  title: string;
+  description: string;
+  status: "concluded" | "inProgress" | "locked";
+  imgURL?: string;
+  totalProgress: number;
+  progress: number;
+  color: string;
+}
+
+export interface SectionUnitInfoNivel {
+  id: string;
+  title: string;
+  status: "concluded" | "inProgress" | "locked";
+  conquest: number;
+  difficulty: "easy" | "medium" | "hard";
+}
+
+export interface SectionUnitInfo {
+  title: string;
+  description: string;
+  status: "concluded" | "inProgress" | "locked";
+  color: string;
+  nivels: SectionUnitInfoNivel[];
+}
+
+export interface SectionInfoUnits extends SectionInfo {
+  units: SectionUnitInfo[];
+}
