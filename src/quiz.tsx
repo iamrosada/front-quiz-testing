@@ -310,6 +310,9 @@ interface QuizData {
     description: string;
     color: string;
     levels: {
+      title: string; // Novo campo para o título
+      description: string; // Novo campo para a descrição
+      conquest: number; // Novo campo para a conquista
       difficulty: "easy" | "medium" | "hard";
       quizes: {
         questionText: string;
@@ -335,6 +338,9 @@ const CreateQuizForm: React.FC = () => {
           levels: [
             {
               difficulty: "easy",
+              title: "",
+              description: "",
+              conquest: 0,
               quizes: [
                 {
                   questionText: "",
@@ -365,6 +371,9 @@ const CreateQuizForm: React.FC = () => {
             levels: [
               {
                 difficulty: "easy",
+                title: "",
+                description: "",
+                conquest: 0,
                 quizes: [
                   {
                     questionText: "",
@@ -389,6 +398,9 @@ const CreateQuizForm: React.FC = () => {
       levels: [
         {
           difficulty: "easy",
+          title: "",
+          description: "",
+          conquest: 0,
           quizes: [
             {
               questionText: "",
@@ -406,6 +418,9 @@ const CreateQuizForm: React.FC = () => {
     const newFormData = [...formData];
     newFormData[sectionIndex].units[unitIndex].levels.push({
       difficulty: "easy",
+      title: "",
+      description: "",
+      conquest: 0,
       quizes: [
         { questionText: "", options: ["", "", "", ""], correctOptionIndex: "" },
       ],
@@ -427,26 +442,6 @@ const CreateQuizForm: React.FC = () => {
     setFormData(newFormData);
   };
 
-  // const handleChange = (
-  //   e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  //   sectionIndex: number,
-  //   unitIndex: number,
-  //   levelIndex: number,
-  //   questionIndex: number,
-  //   field: string
-  // ) => {
-  //   const { value } = e.target;
-  //   const newFormData = [...formData] as any;
-  //   if (field === "options") {
-  //     newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes[
-  //       questionIndex
-  //     ].options[e.target.dataset.optionindex as any] = value;
-  //   } else {
-  //     newFormData[sectionIndex].units[unitIndex].levels[levelIndex][field] =
-  //       value;
-  //   }
-  //   setFormData(newFormData);
-  // };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     sectionIndex: number,
@@ -681,6 +676,102 @@ const CreateQuizForm: React.FC = () => {
                   key={levelIndex}
                   className="border border-gray-300 rounded p-4 mb-4"
                 >
+                  <input
+                    type="text"
+                    placeholder="Level Title"
+                    value={level.title}
+                    onChange={(e) =>
+                      setFormData(
+                        formData.map((item, index) =>
+                          index === sectionIndex
+                            ? {
+                                ...item,
+                                units: item.units.map((u: any, i: any) =>
+                                  i === unitIndex
+                                    ? {
+                                        ...u,
+                                        levels: u.levels.map((l: any, j: any) =>
+                                          j === levelIndex
+                                            ? { ...l, title: e.target.value }
+                                            : l
+                                        ),
+                                      }
+                                    : u
+                                ),
+                              }
+                            : item
+                        )
+                      )
+                    }
+                    className="border border-gray-300 rounded p-2 mb-2"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Level Description"
+                    value={level.description}
+                    onChange={(e) =>
+                      setFormData(
+                        formData.map((item, index) =>
+                          index === sectionIndex
+                            ? {
+                                ...item,
+                                units: item.units.map((u: any, i: any) =>
+                                  i === unitIndex
+                                    ? {
+                                        ...u,
+                                        levels: u.levels.map((l: any, j: any) =>
+                                          j === levelIndex
+                                            ? {
+                                                ...l,
+                                                description: e.target.value,
+                                              }
+                                            : l
+                                        ),
+                                      }
+                                    : u
+                                ),
+                              }
+                            : item
+                        )
+                      )
+                    }
+                    className="border border-gray-300 rounded p-2 mb-2"
+                  />
+
+                  <input
+                    type="number"
+                    placeholder="Conquest"
+                    value={level.conquest}
+                    onChange={(e) =>
+                      setFormData(
+                        formData.map((item, index) =>
+                          index === sectionIndex
+                            ? {
+                                ...item,
+                                units: item.units.map((u: any, i: any) =>
+                                  i === unitIndex
+                                    ? {
+                                        ...u,
+                                        levels: u.levels.map((l: any, j: any) =>
+                                          j === levelIndex
+                                            ? {
+                                                ...l,
+                                                conquest: parseInt(
+                                                  e.target.value
+                                                ),
+                                              }
+                                            : l
+                                        ),
+                                      }
+                                    : u
+                                ),
+                              }
+                            : item
+                        )
+                      )
+                    }
+                    className="border border-gray-300 rounded p-2 mb-2"
+                  />
                   <select
                     value={level.difficulty}
                     onChange={(e) =>
