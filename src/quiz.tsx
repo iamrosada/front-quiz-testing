@@ -307,10 +307,10 @@ interface QuizData {
   color: string;
   units: {
     unitName: string;
-    description: string; // Novo campo para a descrição
-    color: string; // Novo campo para a cor
-    difficulty: "easy" | "medium" | "hard"; // Novo campo para a dificuldade
+    description: string;
+    color: string;
     levels: {
+      difficulty: "easy" | "medium" | "hard";
       quizes: {
         questionText: string;
         options: string[];
@@ -330,13 +330,11 @@ const CreateQuizForm: React.FC = () => {
       units: [
         {
           unitName: "",
-          color: "", // Cor inicial vazia
-
-          difficulty: "easy", // Dificuldade padrão é fácil
-          description: "", // Descrição inicial vazia
-
+          color: "",
+          description: "",
           levels: [
             {
+              difficulty: "easy",
               quizes: [
                 {
                   questionText: "",
@@ -362,13 +360,11 @@ const CreateQuizForm: React.FC = () => {
         units: [
           {
             unitName: "",
-            difficulty: "easy", // Dificuldade padrão é fácil
-            color: "", // Cor inicial vazia
-
-            description: "", // Descrição inicial vazia
-
+            color: "",
+            description: "",
             levels: [
               {
+                difficulty: "easy",
                 quizes: [
                   {
                     questionText: "",
@@ -388,11 +384,11 @@ const CreateQuizForm: React.FC = () => {
     const newFormData = [...formData];
     newFormData[sectionIndex].units.push({
       unitName: "",
-      difficulty: "easy", // Dificuldade padrão é fácil
-      color: "", // Cor inicial vazia
-      description: "", // Descrição inicial vazia
+      color: "",
+      description: "",
       levels: [
         {
+          difficulty: "easy",
           quizes: [
             {
               questionText: "",
@@ -409,6 +405,7 @@ const CreateQuizForm: React.FC = () => {
   const handleAddLevel = (sectionIndex: number, unitIndex: number) => {
     const newFormData = [...formData];
     newFormData[sectionIndex].units[unitIndex].levels.push({
+      difficulty: "easy",
       quizes: [
         { questionText: "", options: ["", "", "", ""], correctOptionIndex: "" },
       ],
@@ -430,6 +427,26 @@ const CreateQuizForm: React.FC = () => {
     setFormData(newFormData);
   };
 
+  // const handleChange = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  //   sectionIndex: number,
+  //   unitIndex: number,
+  //   levelIndex: number,
+  //   questionIndex: number,
+  //   field: string
+  // ) => {
+  //   const { value } = e.target;
+  //   const newFormData = [...formData] as any;
+  //   if (field === "options") {
+  //     newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes[
+  //       questionIndex
+  //     ].options[e.target.dataset.optionindex as any] = value;
+  //   } else {
+  //     newFormData[sectionIndex].units[unitIndex].levels[levelIndex][field] =
+  //       value;
+  //   }
+  //   setFormData(newFormData);
+  // };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     sectionIndex: number,
@@ -446,7 +463,7 @@ const CreateQuizForm: React.FC = () => {
       ].options[e.target.dataset.optionindex as any] = value;
     } else {
       newFormData[sectionIndex].units[unitIndex].levels[levelIndex].quizes[
-        questionIndex as any
+        questionIndex
       ][field] = value;
     }
     setFormData(newFormData);
@@ -460,26 +477,23 @@ const CreateQuizForm: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64URL = reader.result as string; // URL da imagem em Base64
+        const base64URL = reader.result as string;
         setFormData((prevState) => {
           const newState = [...prevState];
           newState[sectionIndex].imgURL = base64URL;
           return newState;
         });
       };
-      reader.readAsDataURL(file); // Lê o arquivo como uma URL de dados (Base64)
+      reader.readAsDataURL(file);
     }
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // const response = await axios.post("/api/create-quiz", formData);
-      await axios.post(
-        "http://localhost:8080/v1/education/quiz/create",
-        formData
-      );
-
       console.log(JSON.stringify(formData, null, 2));
+      // Uncomment the axios request when you are ready to submit data
+      // await axios.post("http://localhost:8080/v1/education/quiz/create", formData);
       // Perform any actions needed after data submission here
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -667,6 +681,41 @@ const CreateQuizForm: React.FC = () => {
                   key={levelIndex}
                   className="border border-gray-300 rounded p-4 mb-4"
                 >
+                  <select
+                    value={level.difficulty}
+                    onChange={(e) =>
+                      setFormData(
+                        formData.map((item, index) =>
+                          index === sectionIndex
+                            ? {
+                                ...item,
+                                units: item.units.map((u: any, i: any) =>
+                                  i === unitIndex
+                                    ? {
+                                        ...u,
+                                        levels: u.levels.map(
+                                          (l: any, idx: any) =>
+                                            idx === levelIndex
+                                              ? {
+                                                  ...l,
+                                                  difficulty: e.target.value,
+                                                }
+                                              : l
+                                        ),
+                                      }
+                                    : u
+                                ),
+                              }
+                            : item
+                        )
+                      )
+                    }
+                    className="border border-gray-300 rounded p-2 mb-2"
+                  >
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                  </select>
                   {level.quizes.map((quiz: any, quizIndex: any) => (
                     <div key={quizIndex} className="mb-2">
                       <input
