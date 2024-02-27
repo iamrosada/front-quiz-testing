@@ -307,6 +307,9 @@ interface QuizData {
   color: string;
   units: {
     unitName: string;
+    description: string; // Novo campo para a descrição
+    color: string; // Novo campo para a cor
+    difficulty: "easy" | "medium" | "hard"; // Novo campo para a dificuldade
     levels: {
       quizes: {
         questionText: string;
@@ -327,6 +330,11 @@ const CreateQuizForm: React.FC = () => {
       units: [
         {
           unitName: "",
+          color: "", // Cor inicial vazia
+
+          difficulty: "easy", // Dificuldade padrão é fácil
+          description: "", // Descrição inicial vazia
+
           levels: [
             {
               quizes: [
@@ -354,6 +362,11 @@ const CreateQuizForm: React.FC = () => {
         units: [
           {
             unitName: "",
+            difficulty: "easy", // Dificuldade padrão é fácil
+            color: "", // Cor inicial vazia
+
+            description: "", // Descrição inicial vazia
+
             levels: [
               {
                 quizes: [
@@ -375,6 +388,9 @@ const CreateQuizForm: React.FC = () => {
     const newFormData = [...formData];
     newFormData[sectionIndex].units.push({
       unitName: "",
+      difficulty: "easy", // Dificuldade padrão é fácil
+      color: "", // Cor inicial vazia
+      description: "", // Descrição inicial vazia
       levels: [
         {
           quizes: [
@@ -435,6 +451,7 @@ const CreateQuizForm: React.FC = () => {
     }
     setFormData(newFormData);
   };
+
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     sectionIndex: number
@@ -457,10 +474,10 @@ const CreateQuizForm: React.FC = () => {
     e.preventDefault();
     try {
       // const response = await axios.post("/api/create-quiz", formData);
-      // await axios.post(
-      //   "http://localhost:8080/v1/education/quiz/create",
-      //   formData
-      // );
+      await axios.post(
+        "http://localhost:8080/v1/education/quiz/create",
+        formData
+      );
 
       console.log(JSON.stringify(formData, null, 2));
       // Perform any actions needed after data submission here
@@ -576,6 +593,75 @@ const CreateQuizForm: React.FC = () => {
                 }
                 className="border border-gray-300 rounded p-2 mb-2"
               />
+              <input
+                type="text"
+                placeholder="Unit Description"
+                value={unit.description}
+                onChange={(e) =>
+                  setFormData(
+                    formData.map((item, index) =>
+                      index === sectionIndex
+                        ? {
+                            ...item,
+                            units: item.units.map((u: any, i: any) =>
+                              i === unitIndex
+                                ? { ...u, description: e.target.value }
+                                : u
+                            ),
+                          }
+                        : item
+                    )
+                  )
+                }
+                className="border border-gray-300 rounded p-2 mb-2"
+              />
+              <input
+                type="text"
+                placeholder="Unit Color"
+                value={unit.color}
+                onChange={(e) =>
+                  setFormData(
+                    formData.map((item, index) =>
+                      index === sectionIndex
+                        ? {
+                            ...item,
+                            units: item.units.map((u: any, i: any) =>
+                              i === unitIndex
+                                ? { ...u, color: e.target.value }
+                                : u
+                            ),
+                          }
+                        : item
+                    )
+                  )
+                }
+                className="border border-gray-300 rounded p-2 mb-2"
+              />
+
+              <select
+                value={unit.difficulty}
+                onChange={(e) =>
+                  setFormData(
+                    formData.map((item, index) =>
+                      index === sectionIndex
+                        ? {
+                            ...item,
+                            units: item.units.map((u: any, i: any) =>
+                              i === unitIndex
+                                ? { ...u, difficulty: e.target.value }
+                                : u
+                            ),
+                          }
+                        : item
+                    )
+                  )
+                }
+                className="border border-gray-300 rounded p-2 mb-2"
+              >
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
               {unit.levels.map((level: any, levelIndex: any) => (
                 <div
                   key={levelIndex}
