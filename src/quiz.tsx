@@ -164,10 +164,10 @@ const CreateQuizForm: React.FC = () => {
     e.preventDefault();
     try {
       console.log(JSON.stringify(formData, null, 2));
-      // await axios.post(
-      //   "http://localhost:8080/v1/education/quiz/create",
-      //   formData
-      // );
+      await axios.post(
+        "http://localhost:8080/v1/education/quiz/create",
+        formData
+      );
       // Realizar quaisquer ações necessárias após a submissão dos dados aqui
     } catch (error) {
       console.error("Erro ao enviar dados:", error);
@@ -1537,3 +1537,24 @@ export default CreateQuizForm;
 // export interface SectionInfoUnits extends SectionInfo {
 //   units: SectionUnitInfo[];
 // }
+
+type Quiz = Array<{
+  id: string;
+  quiz: {
+    questionText: string;
+    options: Array<{
+      id: string;
+      label: string;
+    }>;
+  };
+}>;
+
+type QuizDB = {
+  sectionId: string;
+  unitId: string;
+  levelId: string;
+  quiz: Array<{
+    id: string;
+    idCorrection: string[];
+  }>;
+};
